@@ -2,19 +2,20 @@ unit WebSocket.Server.Helpers;
 
 interface
 
-uses IdIOHandler, IdGlobal;
+uses IdIOHandler, IdGlobal, System.JSON;
 
 type
   TIdIOHandlerHelper = class helper for TIdIOHandler
   private
     function GetHandShaked: Boolean;
     function ReadBytes: TArray<byte>;
-    procedure WriteBytes(RawData: TArray<byte>);
+    procedure Send(const ARawData: TArray<byte>); overload;
     procedure SetHandShaked(const AValue: Boolean);
   public
     property HandShaked: Boolean read GetHandShaked write SetHandShaked;
     function ReadString: string;
-    procedure WriteString(const AValue: string);
+    procedure Send(const AMessage: string); overload;
+    procedure Send(const ACode: Integer; const AMessage: string); overload;
   end;
 
 implementation
@@ -71,34 +72,49 @@ begin
   Result := IndyTextEncoding_UTF8.GetString(TIdBytes(ReadBytes));
 end;
 
+procedure TIdIOHandlerHelper.Send(const ACode: Integer; const AMessage: string);
+var
+  LJSONObject: TJSONObject;
+begin
+  LJSONObject := TJSONObject.Create;
+  try
+    LJSONObject.AddPair('code', TJSONNumber(ACode));
+    LJSONObject.AddPair('message', AMessage);
+    Send(LJSONObject.ToString);
+  finally
+    LJSONObject.Free;
+  end;
+end;
+
 procedure TIdIOHandlerHelper.SetHandShaked(const AValue: Boolean);
 begin
   Self.Tag := Ord(AValue);
 end;
 
-procedure TIdIOHandlerHelper.WriteBytes(RawData: TArray<byte>);
+procedure TIdIOHandlerHelper.Send(const ARawData: TArray<byte>);
 var
   LBytes: TArray<Byte>;
 begin
   LBytes := [$81];
-  if Length(RawData) <= 125 then
-    LBytes := LBytes + [Length(RawData)]
-  else if (Length(RawData) >= 126) and (Length(RawData) <= 65535) then
-    LBytes := LBytes + [126, (Length(RawData) shr 8) and 255, Length(RawData) and 255]
+  if Length(ARawData) <= 125 then
+    LBytes := LBytes + [Length(ARawData)]
+  else if (Length(ARawData) >= 126) and (Length(ARawData) <= 65535) then
+    LBytes := LBytes + [126, (Length(ARawData) shr 8) and 255, Length(ARawData) and 255]
   else
-    LBytes := LBytes + [127, (int64(Length(RawData)) shr 56) and 255, (int64(Length(RawData)) shr 48) and 255,
-      (int64(Length(RawData)) shr 40) and 255, (int64(Length(RawData)) shr 32) and 255,
-      (Length(RawData) shr 24) and 255, (Length(RawData) shr 16) and 255, (Length(RawData) shr 8) and 255, Length(RawData) and 255];
-  LBytes := LBytes + RawData;
+    LBytes := LBytes + [127, (int64(Length(ARawData)) shr 56) and 255, (int64(Length(ARawData)) shr 48) and 255,
+      (int64(Length(ARawData)) shr 40) and 255, (int64(Length(ARawData)) shr 32) and 255,
+      (Length(ARawData) shr 24) and 255, (Length(ARawData) shr 16) and 255, (Length(ARawData) shr 8) and 255, Length(ARawData) and 255];
+  LBytes := LBytes + ARawData;
   try
     Write(TIdBytes(LBytes), Length(LBytes));
   except
   end;
 end;
 
-procedure TIdIOHandlerHelper.WriteString(const AValue: string);
+procedure TIdIOHandlerHelper.Send(const AMessage: string);
 begin
-  WriteBytes(TArray<Byte>(IndyTextEncoding_UTF8.GetBytes(AValue)));
+  Send(TArray<Byte>(IndyTextEncoding_UTF8.GetBytes(AMessage)));
 end;
 
 end.
+
