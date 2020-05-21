@@ -44,7 +44,9 @@ end;
 Check out our samples projects for the server and client side, with web and Delphi code. If you have any questions or suggestion, please contact, make your pull request or create an issue.
 
 ## Delphi Client
+For Delphi websocket connections I recommend to use the [**websocket-client**](https://github.com/mateusvicente100/websocket-client) project. It's simple to use and install
 ![sample-client-delphi](samples/images/sample-client-delphi.png)
 
 ## Web Client
+For web we have native websocket connection in html
 ![sample-client-web](samples/images/sample-client-web.png)
