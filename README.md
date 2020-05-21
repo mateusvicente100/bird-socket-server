@@ -43,5 +43,8 @@ end;
 ## Samples
 Check out our samples projects for the server and client side, with web and Delphi code. If you have any questions or suggestion, please contact, make your pull request or create an issue.
 
+## Delphi Client
 ![sample-client-delphi](samples/images/sample-client-delphi.png)
+
+## Web Client
 ![sample-client-web](samples/images/sample-client-web.png)
