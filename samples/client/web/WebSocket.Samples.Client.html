@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>WebSocket Samples</title>
+	<style>
+		table {
+			width: 100%;
+			height: 100%;
+		}
+
+		th {
+			padding-left: 5px;
+			text-align: left;
+			font-family: 'Segoe UI';
+			font-weight: normal;
+			font-size: 14px;
+			height: 25px;
+		}
+
+		tr:nth-child(even) {
+ 			background-color: #eee;
+		}		
+
+		input {
+			width: 100%;
+		}
+
+		button {
+			width: 75px;
+		}
+
+		th.header {
+			background-color: rgb(75, 139, 245);
+			color: white;
+		}
+
+		th.header-log {
+			background-color: #dddddd;			
+		}
+
+		th.label {
+			width: 95%;
+			color: black;
+		}
+	</style>
+	<script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+</head>
+
+<body>
+	<table>
+		<thead>
+			<tr>
+				<th class="header" colspan="2">Send</th>
+			</tr>
+
+			<tr style="height: 45px; background-color: white;">
+				<th style="width: 100%;">
+					<input type="text" id="textMessage">
+				</th>
+				<th>
+					<button onclick="sendMessage()">Send</button>
+				</th>
+			</tr>
+			<tr>
+				<th class="header" colspan="2">Log</th>
+			</tr>			
+		</thead>		
+	</table>
+	<table>
+		<thead>
+			<tr>
+				<th class="header-log" style="width: 150px;">Date</th>
+				<th class="header-log">Message</th>
+			</tr>
+		</thead>
+		<tbody id="log">
+		</tbody>
+	</table>	
+</body>
+<script type="text/javascript">
+	
+	const socket = new WebSocket('ws://localhost:8080');
+
+	socket.addEventListener('open', function (event) {
+		socket.send('Hello Server!');
+	});
+
+	socket.addEventListener('message', function (event) {
+		var today = new Date();
+		var date = String(today.getDate()).padStart(2, '0') + '/' + String(today.getMonth() + 1).padStart(2, '0') + '/' + today.getFullYear();
+		var time = String(today.getHours()).padStart(2, '0') + ":" + String(today.getMinutes()).padStart(2, '0') + ":" + String(today.getSeconds()).padStart(2, '0');
+		var dateTime = date+' '+time;	
+		$("#log").append(
+			"<tr>" +
+				"<th>" + dateTime + "</th>" +		
+				"<th>" + event.data + "</th>" +
+			"</tr>"
+		);			
+	});
+
+	function sendMessage() {		
+		socket.send(document.getElementById("textMessage").value);	
+	};
+
+</script>
+
+</html>
