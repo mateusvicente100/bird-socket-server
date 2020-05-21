@@ -22,6 +22,11 @@ Add the following folder to your project, in *Project > Options > Resource Compi
 ## Getting Started
 You need to use WebSocket.Server
 ```pascal
+uses WebSocket.Server;
+```
+
+Create an instance of TWebSocketServer and assign the methods and propertys
+```pascal
 proceudre StartServer;
 var
   LServer: TWebSocketServer;
@@ -33,11 +38,6 @@ begin
   LServer.OnDisconnect := OnDisconnect;
   LServer.Active := True;  
 end;
-```
-
-Create an instance of TWebSocketServer and assign the methods and propertys
-```pascal
-uses WebSocket.Server;
 ```
 
 ## Samples
