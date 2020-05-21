@@ -27,7 +27,7 @@ uses WebSocket.Server;
 
 Create an instance of TWebSocketServer and assign the methods and propertys
 ```pascal
-proceudre StartServer;
+procedure Start;
 var
   LServer: TWebSocketServer;
 begin
