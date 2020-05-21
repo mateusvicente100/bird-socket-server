@@ -45,6 +45,21 @@ Check out our samples projects for the server and client side, with web and Delp
 
 ## Delphi Client
 For Delphi websocket connections I recommend to use the [**websocket-client**](https://github.com/mateusvicente100/websocket-client) project. It's simple to use and install
+```pascal
+procedure Start;
+var
+  LWebSocket: TWebSocketClient;
+begin
+  LWebSocket := TWebSocketClient.New('ws://localhost:8080');
+  LWebSocket.AddEventListener(TEventType.MESSAGE,
+    procedure(const AText: string)
+    begin
+      Log(AText);
+    end);
+  LWebSocket.Connect;
+  LWebSocket.Send('Hello Server');
+end;
+```
 
 <p align="center">
   <img src="samples/images/sample-client-delphi.png">  
@@ -52,6 +67,19 @@ For Delphi websocket connections I recommend to use the [**websocket-client**](h
 
 ## Web Client
 For web we have native websocket connection in html
+```html
+<script>
+	const socket = new WebSocket('ws://localhost:8080');
+
+	socket.addEventListener('message', function (event) {
+		console.log(event.data);		
+	});	
+
+	socket.addEventListener('open', function (event) {
+		socket.send('Hello Server!');
+	});
+</script>  
+```
 
 <p align="center">
   <img src="samples/images/sample-client-web.png">
