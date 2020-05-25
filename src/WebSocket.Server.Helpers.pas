@@ -2,7 +2,7 @@ unit WebSocket.Server.Helpers;
 
 interface
 
-uses IdIOHandler, IdGlobal, System.JSON;
+uses IdIOHandler, IdGlobal, System.JSON, System.SysUtils;
 
 type
   TIdIOHandlerHelper = class helper for TIdIOHandler
@@ -16,6 +16,7 @@ type
     function ReadString: string;
     procedure Send(const AMessage: string); overload;
     procedure Send(const ACode: Integer; const AMessage: string); overload;
+    procedure Send(const ACode: Integer; const AMessage: string; const AValues: array of const); overload;
   end;
 
 implementation
@@ -84,6 +85,11 @@ begin
   finally
     LJSONObject.Free;
   end;
+end;
+
+procedure TIdIOHandlerHelper.Send(const ACode: Integer; const AMessage: string; const AValues: array of const);
+begin
+  Send(ACode, Format(AMessage, AValues));
 end;
 
 procedure TIdIOHandlerHelper.SetHandShaked(const AValue: Boolean);
