@@ -2,7 +2,7 @@ unit WebSocket.Server.Helpers;
 
 interface
 
-uses IdIOHandler, IdGlobal, System.JSON, System.SysUtils;
+uses IdIOHandler, IdGlobal, System.SysUtils, System.JSON;
 
 type
   TIdIOHandlerHelper = class helper for TIdIOHandler
@@ -17,6 +17,7 @@ type
     procedure Send(const AMessage: string); overload;
     procedure Send(const ACode: Integer; const AMessage: string); overload;
     procedure Send(const ACode: Integer; const AMessage: string; const AValues: array of const); overload;
+    procedure Send(const AJSONObject: TJSONObject; const AOwns: Boolean = True); overload;
   end;
 
 implementation
@@ -74,22 +75,23 @@ begin
 end;
 
 procedure TIdIOHandlerHelper.Send(const ACode: Integer; const AMessage: string);
-var
-  LJSONObject: TJSONObject;
 begin
-  LJSONObject := TJSONObject.Create;
-  try
-    LJSONObject.AddPair('code', TJSONNumber(ACode));
-    LJSONObject.AddPair('message', AMessage);
-    Send(LJSONObject.ToString);
-  finally
-    LJSONObject.Free;
-  end;
+  Self.Send(TJSONObject.Create.AddPair('code', TJSONNumber.Create(ACode)).AddPair('message', AMessage));
 end;
 
 procedure TIdIOHandlerHelper.Send(const ACode: Integer; const AMessage: string; const AValues: array of const);
 begin
-  Send(ACode, Format(AMessage, AValues));
+  Self.Send(ACode, Format(AMessage, AValues));
+end;
+
+procedure TIdIOHandlerHelper.Send(const AJSONObject: TJSONObject; const AOwns: Boolean);
+begin
+  try
+    Self.Send(AJSONObject.ToString);
+  finally
+    if AOwns then
+      AJSONObject.Free;
+  end;
 end;
 
 procedure TIdIOHandlerHelper.SetHandShaked(const AValue: Boolean);
@@ -119,7 +121,7 @@ end;
 
 procedure TIdIOHandlerHelper.Send(const AMessage: string);
 begin
-  Send(TArray<Byte>(IndyTextEncoding_UTF8.GetBytes(AMessage)));
+  Self.Send(TArray<Byte>(IndyTextEncoding_UTF8.GetBytes(AMessage)));
 end;
 
 end.
