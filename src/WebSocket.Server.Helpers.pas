@@ -18,6 +18,7 @@ type
     procedure Send(const ACode: Integer; const AMessage: string); overload;
     procedure Send(const ACode: Integer; const AMessage: string; const AValues: array of const); overload;
     procedure Send(const AJSONObject: TJSONObject; const AOwns: Boolean = True); overload;
+    procedure SendFile(const AFile: string); overload;
   end;
 
 implementation
@@ -92,6 +93,11 @@ begin
     if AOwns then
       AJSONObject.Free;
   end;
+end;
+
+procedure TIdIOHandlerHelper.SendFile(const AFile: string);
+begin
+  WriteFile(AFile, True);
 end;
 
 procedure TIdIOHandlerHelper.SetHandShaked(const AValue: Boolean);

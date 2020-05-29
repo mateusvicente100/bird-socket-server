@@ -68,8 +68,7 @@ begin
           if LHeaders[HEADERS_UPGRADE].ToLower.Equals(HEADERS_WEBSOCKET) then
           begin
             try
-              AContext.Connection.IOHandler.Write(GetSuccessHandShakeMessage(GetEncodedHash(LHeaders[HEADERS_AUTHORIZATION])),
-                IndyTextEncoding_UTF8);
+              AContext.Connection.IOHandler.Send(GetSuccessHandShakeMessage(GetEncodedHash(LHeaders[HEADERS_AUTHORIZATION])));
             except
             end;
             AContext.Connection.IOHandler.HandShaked := True;
