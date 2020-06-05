@@ -26,7 +26,7 @@ end;
 constructor TWebSocketServerSamples.Create;
 begin
   FServer := TWebSocketServer.Create;
-  FServer.DefaultPort := 8080;
+  FServer.DefaultPort := 8313;
   FServer.OnExecute := Execute;
   FServer.OnConnect := Connect;
   FServer.OnDisconnect := Disconnect;
@@ -53,11 +53,11 @@ begin
   AContext.Connection.IOHandler.CheckForDataOnSource(TIMEOUT_DATA_ON_SOURCE);
   LMessage := AContext.Connection.IOHandler.ReadString;
   if LMessage.Trim.Equals('ping') then
-    AContext.Connection.IOHandler.WriteString('pong')
+    AContext.Connection.IOHandler.Send('pong')
   else if LMessage.Trim.IsEmpty then
-    AContext.Connection.IOHandler.WriteString('empty message')
+    AContext.Connection.IOHandler.Send('empty message')
   else
-    AContext.Connection.IOHandler.WriteString(Format('message received: "%s"', [LMessage]));
+    AContext.Connection.IOHandler.Send(Format('message received: "%s"', [LMessage]));
 end;
 
 end.
