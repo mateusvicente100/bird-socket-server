@@ -1,44 +1,82 @@
-unit WebSocket.Server;
+unit Bird.Socket.Server;
 
 interface
 
 uses IdCustomTCPServer, IdHashSHA, IdSSLOpenSSL, IdContext, IdSSL, IdIOHandler, IdGlobal, IdCoderMIME, System.SysUtils,
-  System.Generics.Collections, WebSocket.Server.Helpers, WebSocket.Server.Consts, WebSocket.Server.Types;
+  System.Generics.Collections, Bird.Socket.Helpers, Bird.Socket.Consts, Bird.Socket.Types;
 
 type
-  TWebSocketServer = class(TIdCustomTCPServer)
+  TBirdSocketServer = class(TIdCustomTCPServer)
   private
     FIdServerIOHandlerSSLOpenSSL: TIdServerIOHandlerSSLOpenSSL;
     FIdHashSHA1: TIdHashSHA1;
+    FOnConnect: TEventListener;
+    FOnDisconnect: TEventListener;
+    FOnExecute: TEventListener;
     function ParseHeaders(const AValue: string): THeaders;
     function GetEncodedHash(const ASecretKey: string): string;
     function GetSuccessHandShakeMessage(const AHash: string): string;
+    procedure DoOnConnect(AContext: TIdContext);
+    procedure DoOnDisconnect(AContext: TIdContext);
+    procedure DoOnExecute(AContext: TIdContext);
   protected
     function DoExecute(AContext: TIdContext): Boolean; override;
     procedure DoConnect(AContext: TIdContext); override;
   public
-    constructor Create;
+    constructor Create(const APort: Integer);
     property OnExecute;
     procedure InitSSL(AIdServerIOHandlerSSLOpenSSL: TIdServerIOHandlerSSLOpenSSL);
+    procedure AddEventListener(const AEventType: TEventType; const AEvent: TEventListener);
+    procedure Start; virtual; abstract;
     destructor Destroy; override;
   end;
 
 implementation
 
-constructor TWebSocketServer.Create;
+procedure TBirdSocketServer.AddEventListener(const AEventType: TEventType; const AEvent: TEventListener);
 begin
-  inherited Create;
-  FIdHashSHA1 := TIdHashSHA1.Create;
-  FIdServerIOHandlerSSLOpenSSL := nil;
+  case AEventType of
+    TEventType.CONNECT:
+      FOnConnect := AEvent;
+    TEventType.EXECUTE:
+      FOnExecute := AEvent;
+    TEventType.DISCONNECT:
+      FOnDisconnect := AEvent;
+  end;
 end;
 
-destructor TWebSocketServer.Destroy;
+procedure TBirdSocketServer.DoOnConnect(AContext: TIdContext);
 begin
+  if Assigned(FOnConnect) then
+    FOnConnect(AContext);
+end;
+
+constructor TBirdSocketServer.Create(const APort: Integer);
+begin
+  inherited Create;
+  DefaultPort := APort;
+  Active := True;
+  FIdHashSHA1 := TIdHashSHA1.Create;
+  FIdServerIOHandlerSSLOpenSSL := nil;
+  OnConnect := DoOnConnect;
+  OnDisconnect := DoOnDisconnect;
+  OnExecute := DoOnExecute;
+end;
+
+destructor TBirdSocketServer.Destroy;
+begin
+  Active := False;
   FIdHashSHA1.DisposeOf;
   inherited;
 end;
 
-procedure TWebSocketServer.DoConnect(AContext: TIdContext);
+procedure TBirdSocketServer.DoOnDisconnect(AContext: TIdContext);
+begin
+  if Assigned(FOnDisconnect) then
+    FOnDisconnect(AContext);
+end;
+
+procedure TBirdSocketServer.DoConnect(AContext: TIdContext);
 begin
   if (AContext.Connection.IOHandler is TIdSSLIOHandlerSocketBase) then
     TIdSSLIOHandlerSocketBase(AContext.Connection.IOHandler).PassThrough := False;
@@ -46,7 +84,7 @@ begin
   inherited;
 end;
 
-function TWebSocketServer.DoExecute(AContext: TIdContext): Boolean;
+function TBirdSocketServer.DoExecute(AContext: TIdContext): Boolean;
 var
   LBytes: TArray<Byte>;
   LMessage: string;
@@ -82,12 +120,18 @@ begin
   Result := inherited;
 end;
 
-function TWebSocketServer.GetEncodedHash(const ASecretKey: string): string;
+procedure TBirdSocketServer.DoOnExecute(AContext: TIdContext);
+begin
+  if Assigned(FOnExecute) then
+    FOnExecute(AContext);
+end;
+
+function TBirdSocketServer.GetEncodedHash(const ASecretKey: string): string;
 begin
   Result := TIdEncoderMIME.EncodeBytes(FIdHashSHA1.HashString(ASecretKey + '258EAFA5-E914-47DA-95CA-C5AB0DC85B11'));
 end;
 
-function TWebSocketServer.GetSuccessHandShakeMessage(const AHash: string): string;
+function TBirdSocketServer.GetSuccessHandShakeMessage(const AHash: string): string;
 begin
   Result := Format(
     'HTTP/1.1 101 Switching Protocols'#13#10 +
@@ -96,7 +140,7 @@ begin
     'Sec-WebSocket-Accept: %s'#13#10#13#10, [AHash]);
 end;
 
-procedure TWebSocketServer.InitSSL(AIdServerIOHandlerSSLOpenSSL: TIdServerIOHandlerSSLOpenSSL);
+procedure TBirdSocketServer.InitSSL(AIdServerIOHandlerSSLOpenSSL: TIdServerIOHandlerSSLOpenSSL);
 var
   LActiveHandler: Boolean;
 begin
@@ -109,7 +153,7 @@ begin
     Self.Active := True;
 end;
 
-function TWebSocketServer.ParseHeaders(const AValue: string): THeaders;
+function TBirdSocketServer.ParseHeaders(const AValue: string): THeaders;
 const
   HEADER_NAME = 0;
   HEADER_VALUE = 1;

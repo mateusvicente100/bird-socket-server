@@ -1,4 +1,4 @@
-unit WebSocket.Server.Helpers;
+unit Bird.Socket.Helpers;
 
 interface
 

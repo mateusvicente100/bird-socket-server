@@ -1,4 +1,4 @@
-unit WebSocket.Server.Consts;
+unit Bird.Socket.Consts;
 
 interface
 
