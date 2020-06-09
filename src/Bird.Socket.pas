@@ -19,8 +19,8 @@ begin
   try
     if IsConsole then
     begin
-      Write('The websocket server is runing on port ' + Self.DefaultPort.ToString);
-      Write('Press return to stop ...');
+      Writeln('The websocket server is runing on port ' + Self.DefaultPort.ToString);
+      Writeln('Press return to stop ...');
       Read(LAttach);
     end;
   except

@@ -1,0 +1,48 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{0F7769A8-9282-4B65-A9A4-0C9C88E41A2B}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="isapi\Bird.Socket.Isapi.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="console\Bird.Socket.Console.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="Bird_Socket_Isapi">
+        <MSBuild Projects="isapi\Bird.Socket.Isapi.dproj"/>
+    </Target>
+    <Target Name="Bird_Socket_Isapi:Clean">
+        <MSBuild Projects="isapi\Bird.Socket.Isapi.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Bird_Socket_Isapi:Make">
+        <MSBuild Projects="isapi\Bird.Socket.Isapi.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Bird_Socket_Console">
+        <MSBuild Projects="console\Bird.Socket.Console.dproj"/>
+    </Target>
+    <Target Name="Bird_Socket_Console:Clean">
+        <MSBuild Projects="console\Bird.Socket.Console.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Bird_Socket_Console:Make">
+        <MSBuild Projects="console\Bird.Socket.Console.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="Bird_Socket_Isapi;Bird_Socket_Console"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="Bird_Socket_Isapi:Clean;Bird_Socket_Console:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="Bird_Socket_Isapi:Make;Bird_Socket_Console:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>
