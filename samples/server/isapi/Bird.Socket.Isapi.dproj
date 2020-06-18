@@ -115,8 +115,9 @@
         <DCCReference Include="..\..\..\src\Bird.Socket.Server.pas"/>
         <DCCReference Include="..\..\..\src\Bird.Socket.Types.pas"/>
         <DCCReference Include="..\..\..\src\Bird.Socket.pas"/>
-        <DCCReference Include="..\..\..\src\Bird.Socket.WebModule.pas">
+        <DCCReference Include="src\Bird.Socket.WebModule.pas">
             <Form>BirdSocketWebModule</Form>
+            <FormType>dfm</FormType>
             <DesignClass>TWebModule</DesignClass>
         </DCCReference>
         <BuildConfiguration Include="Release">
@@ -206,7 +207,7 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="C:\inetpub\fiorilli\sia\websocket\server\Bird.Socket.Isapi.dll" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="Win32\Debug\Bird.Socket.Isapi.dll" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>Bird_Socket_Isapi.dll</RemoteName>
                         <Overwrite>true</Overwrite>

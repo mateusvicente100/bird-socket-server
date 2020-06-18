@@ -3,7 +3,7 @@ unit Bird.Socket.Server;
 interface
 
 uses IdCustomTCPServer, IdHashSHA, IdSSLOpenSSL, IdContext, IdSSL, IdIOHandler, IdGlobal, IdCoderMIME, System.SysUtils,
-  System.Generics.Collections, Bird.Socket.Helpers, Bird.Socket.Consts, Bird.Socket.Types;
+  System.Generics.Collections, Bird.Socket.Helpers, Bird.Socket.Consts, Bird.Socket.Types, Bird.Socket.Context;
 
 type
   TBirdSocketServer = class(TIdCustomTCPServer)
@@ -46,9 +46,16 @@ begin
 end;
 
 procedure TBirdSocketServer.DoOnConnect(AContext: TIdContext);
+var
+  LContext: TBirdSocketContext;
 begin
-  if Assigned(FOnConnect) then
-    FOnConnect(AContext);
+  LContext := TBirdSocketContext.Create(AContext);
+  try
+    if Assigned(FOnConnect) then
+      FOnConnect(LContext);
+  finally
+    LContext.Free;
+  end;
 end;
 
 constructor TBirdSocketServer.Create(const APort: Integer);
@@ -71,9 +78,16 @@ begin
 end;
 
 procedure TBirdSocketServer.DoOnDisconnect(AContext: TIdContext);
+var
+  LContext: TBirdSocketContext;
 begin
-  if Assigned(FOnDisconnect) then
-    FOnDisconnect(AContext);
+  LContext := TBirdSocketContext.Create(AContext);
+  try
+    if Assigned(FOnDisconnect) then
+      FOnDisconnect(LContext);
+  finally
+    LContext.Free;
+  end;
 end;
 
 procedure TBirdSocketServer.DoConnect(AContext: TIdContext);
@@ -121,9 +135,16 @@ begin
 end;
 
 procedure TBirdSocketServer.DoOnExecute(AContext: TIdContext);
+var
+  LContext: TBirdSocketContext;
 begin
-  if Assigned(FOnExecute) then
-    FOnExecute(AContext);
+  LContext := TBirdSocketContext.Create(AContext);
+  try
+    if Assigned(FOnExecute) then
+      FOnExecute(LContext);
+  finally
+    LContext.Free;
+  end;
 end;
 
 function TBirdSocketServer.GetEncodedHash(const ASecretKey: string): string;

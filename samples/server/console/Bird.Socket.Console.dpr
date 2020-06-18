@@ -11,7 +11,8 @@ uses
   Bird.Socket.Helpers in '..\..\..\src\Bird.Socket.Helpers.pas',
   Bird.Socket.Server in '..\..\..\src\Bird.Socket.Server.pas',
   Bird.Socket.Types in '..\..\..\src\Bird.Socket.Types.pas',
-  Bird.Socket in '..\..\..\src\Bird.Socket.pas';
+  Bird.Socket in '..\..\..\src\Bird.Socket.pas',
+  Bird.Socket.Context in '..\..\..\src\Bird.Socket.Context.pas';
 
 var
   LBirdSocket: TBirdSocket;
@@ -19,28 +20,27 @@ begin
   LBirdSocket := TBirdSocket.Create(8080);
   try
     LBirdSocket.AddEventListener(TEventType.CONNECT,
-      procedure(const AContext: TIdContext)
+      procedure(const AContext: TBirdSocketContext)
       begin
         Writeln('Client connected');
       end);
 
     LBirdSocket.AddEventListener(TEventType.EXECUTE,
-      procedure(const AContext: TIdContext)
+      procedure(const AContext: TBirdSocketContext)
       var
         LMessage: string;
       begin
-        AContext.Connection.IOHandler.CheckForDataOnSource(TIMEOUT_DATA_ON_SOURCE);
-        LMessage := AContext.Connection.IOHandler.ReadString;
+        LMessage := AContext.WaitMessage;
         if LMessage.Trim.Equals('ping') then
-          AContext.Connection.IOHandler.Send('pong')
+          AContext.Send('pong')
         else if LMessage.Trim.IsEmpty then
-          AContext.Connection.IOHandler.Send('empty message')
+          AContext.Send('empty message')
         else
-          AContext.Connection.IOHandler.Send(Format('message received: "%s"', [LMessage]));
+          AContext.Send(Format('message received: "%s"', [LMessage]));
       end);
 
     LBirdSocket.AddEventListener(TEventType.DISCONNECT,
-      procedure(const AContext: TIdContext)
+      procedure(const AContext: TBirdSocketContext)
       begin
         Writeln('Client disconnected');
       end);

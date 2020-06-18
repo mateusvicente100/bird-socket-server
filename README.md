@@ -1,13 +1,14 @@
 # Bird Socket Server
 
+This is a websocket server for Delphi.
+
 ![Delphi Supported Versions](https://img.shields.io/badge/Delphi%20Supported%20Versions-10.1%20and%20ever-blue.svg)
 ![Platforms](https://img.shields.io/badge/Supported%20platforms-Win32%20and%20Win64-red.svg)
 
-This is a websocket server for Delphi.
-
 ## Prerequisites
 
-* `[Optional]` For ease I recommend using the Boss for installation
+`[Optional]` For ease I recommend using the Boss for installation
+
 * [**Boss**](https://github.com/HashLoad/boss) - Dependency Manager for Delphi
 
 ## Installation using Boss (dependency manager for Delphi applications)
@@ -42,19 +43,19 @@ begin
   LServer := TBirdSocket.Create(8080);
   try
     LServer.AddEventListener(TEventType.CONNECT,
-      procedure(const AContext: TIdContext)
+      procedure(const AContext: TBirdSocketContext)
       begin
         // Do on connect.
       end);
 
     LServer.AddEventListener(TEventType.EXECUTE,
-      procedure(const AContext: TIdContext)
+      procedure(const AContext: TBirdSocketContext)
       begin
         // Do on execute.
       end);
 
     LServer.AddEventListener(TEventType.DISCONNECT,
-      procedure(const AContext: TIdContext)
+      procedure(const AContext: TBirdSocketContext)
       begin
         // Do on disconnect.
       end);
@@ -90,7 +91,7 @@ end;
 ```
 
 <p align="center">
-  <img src="samples/images/sample-client-delphi.png">  
+  <img src="samples/images/bird-socket-client-sample.png">  
 </p>  
 
 ## Web Client

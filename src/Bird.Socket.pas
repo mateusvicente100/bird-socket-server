@@ -2,9 +2,11 @@ unit Bird.Socket;
 
 interface
 
-uses IdContext, Bird.Socket.Server, Bird.Socket.Helpers, Bird.Socket.Consts, System.SysUtils, Bird.Socket.Types, Web.WebReq;
+uses IdContext, Bird.Socket.Server, System.SysUtils, Bird.Socket.Types, Bird.Socket.Context;
 
 type
+  TEventType = Bird.Socket.Types.TEventType;
+  TBirdSocketContext = Bird.Socket.Context.TBirdSocketContext;
   TBirdSocket = class(TBirdSocketServer)
   public
     procedure Start; override;
@@ -19,8 +21,7 @@ begin
   try
     if IsConsole then
     begin
-      Writeln('The websocket server is runing on port ' + Self.DefaultPort.ToString);
-      Writeln('Press return to stop ...');
+      Writeln('The websocket server is runing on port ' + Self.DefaultPort.ToString + sLineBreak);
       Read(LAttach);
     end;
   except
