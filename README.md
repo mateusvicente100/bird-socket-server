@@ -68,7 +68,12 @@ end;
 
 ## Samples
 
-Check out our samples projects for the server and client side, with web and Delphi code. If you have any questions or suggestion, please contact, make your pull request or create an issue.
+The bird socket can run in many Delphi way.
+
+[**Console**](https://github.com/mateusvicente100/bird-socket-server/tree/master/samples/server/console) - Run a console application
+[**ISAPI**](https://github.com/mateusvicente100/bird-socket-server/tree/master/samples/server/isapi) - Generate a ISAPI dll for IIS
+[**VCL**](https://github.com/mateusvicente100/bird-socket-server/tree/master/samples/server/vcl) - Run a VCL application
+[**Service**](https://github.com/mateusvicente100/bird-socket-server/tree/master/samples/server/service) - Run a windows service
 
 ## Delphi Client
 
