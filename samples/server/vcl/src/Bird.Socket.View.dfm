@@ -4,13 +4,16 @@ object FrmMainMenu: TFrmMainMenu
   BorderStyle = bsNone
   ClientHeight = 600
   ClientWidth = 800
-  Color = clBtnFace
+  Color = 15790320
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  Position = poScreenCenter
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
   object Panel7: TPanel
@@ -21,7 +24,6 @@ object FrmMainMenu: TFrmMainMenu
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitLeft = -149
     DesignSize = (
       800
       40)
@@ -2127,5 +2129,84 @@ object FrmMainMenu: TFrmMainMenu
       Transparent = True
       OnClick = imgCloseClick
     end
+  end
+  object Panel1: TPanel
+    Left = 0
+    Top = 40
+    Width = 800
+    Height = 57
+    Align = alTop
+    BevelOuter = bvNone
+    Color = 15790320
+    ParentBackground = False
+    TabOrder = 1
+    DesignSize = (
+      800
+      57)
+    object lblServer: TLabel
+      Left = 7
+      Top = 6
+      Width = 22
+      Height = 13
+      Caption = 'Port'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = 7947776
+      Font.Height = -11
+      Font.Name = 'Segoe UI'
+      Font.Style = [fsBold]
+      ParentFont = False
+    end
+    object edtServer: TEdit
+      Left = 7
+      Top = 25
+      Width = 620
+      Height = 21
+      Anchors = [akLeft, akTop, akRight]
+      TabOrder = 0
+      Text = '8080'
+    end
+    object btnStop: TButton
+      Left = 714
+      Top = 23
+      Width = 75
+      Height = 25
+      Anchors = [akTop, akRight]
+      Caption = 'Stop'
+      TabOrder = 2
+      OnClick = btnStopClick
+    end
+    object btnStart: TButton
+      Left = 633
+      Top = 23
+      Width = 75
+      Height = 25
+      Anchors = [akTop, akRight]
+      Caption = 'Start'
+      TabOrder = 1
+      OnClick = btnStartClick
+    end
+  end
+  object ListBoxLog: TListBox
+    AlignWithMargins = True
+    Left = 7
+    Top = 97
+    Width = 786
+    Height = 496
+    Margins.Left = 7
+    Margins.Top = 0
+    Margins.Right = 7
+    Margins.Bottom = 7
+    Align = alClient
+    Color = clWhite
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = 7947776
+    Font.Height = -13
+    Font.Name = 'Segoe UI'
+    Font.Style = []
+    ItemHeight = 17
+    ParentFont = False
+    TabOrder = 2
+    ExplicitTop = 145
+    ExplicitHeight = 448
   end
 end

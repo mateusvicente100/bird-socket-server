@@ -161,11 +161,11 @@
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
         <DCCReference Include="..\..\..\src\Bird.Socket.Consts.pas"/>
+        <DCCReference Include="..\..\..\src\Bird.Socket.Context.pas"/>
         <DCCReference Include="..\..\..\src\Bird.Socket.Helpers.pas"/>
+        <DCCReference Include="..\..\..\src\Bird.Socket.pas"/>
         <DCCReference Include="..\..\..\src\Bird.Socket.Server.pas"/>
         <DCCReference Include="..\..\..\src\Bird.Socket.Types.pas"/>
-        <DCCReference Include="..\..\..\src\Bird.Socket.pas"/>
-        <DCCReference Include="..\..\..\src\Bird.Socket.Context.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

@@ -11,6 +11,7 @@ type
   public
     constructor Create(const AIdContext: TIdContext);
     function WaitMessage: string;
+    function IPAdress: string;
     procedure Send(const AMessage: string); overload;
     procedure Send(const ACode: Integer; const AMessage: string); overload;
     procedure Send(const ACode: Integer; const AMessage: string; const AValues: array of const); overload;
@@ -38,6 +39,11 @@ end;
 procedure TBirdSocketContext.Send(const ACode: Integer; const AMessage: string; const AValues: array of const);
 begin
   FIdContext.Connection.IOHandler.Send(ACode, AMessage, AValues);
+end;
+
+function TBirdSocketContext.IPAdress: string;
+begin
+  Result := FIdContext.Connection.Socket.Binding.PeerIP;
 end;
 
 procedure TBirdSocketContext.Send(const AJSONObject: TJSONObject; const AOwns: Boolean);

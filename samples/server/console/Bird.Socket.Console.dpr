@@ -8,11 +8,11 @@ uses
   System.SysUtils,
   IdContext,
   Bird.Socket.Consts in '..\..\..\src\Bird.Socket.Consts.pas',
+  Bird.Socket.Context in '..\..\..\src\Bird.Socket.Context.pas',
   Bird.Socket.Helpers in '..\..\..\src\Bird.Socket.Helpers.pas',
-  Bird.Socket.Server in '..\..\..\src\Bird.Socket.Server.pas',
-  Bird.Socket.Types in '..\..\..\src\Bird.Socket.Types.pas',
   Bird.Socket in '..\..\..\src\Bird.Socket.pas',
-  Bird.Socket.Context in '..\..\..\src\Bird.Socket.Context.pas';
+  Bird.Socket.Server in '..\..\..\src\Bird.Socket.Server.pas',
+  Bird.Socket.Types in '..\..\..\src\Bird.Socket.Types.pas';
 
 var
   LBirdSocket: TBirdSocket;

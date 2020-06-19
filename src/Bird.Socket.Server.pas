@@ -28,6 +28,7 @@ type
     procedure InitSSL(AIdServerIOHandlerSSLOpenSSL: TIdServerIOHandlerSSLOpenSSL);
     procedure AddEventListener(const AEventType: TEventType; const AEvent: TEventListener);
     procedure Start; virtual; abstract;
+    procedure Stop;
     destructor Destroy; override;
   end;
 
@@ -191,6 +192,11 @@ begin
     if (Length(LSplittedLine) > 1) then
       Result.AddOrSetValue(Trim(LSplittedLine[HEADER_NAME]), Trim(LSplittedLine[HEADER_VALUE]));
   end;
+end;
+
+procedure TBirdSocketServer.Stop;
+begin
+  Self.StopListening;
 end;
 
 end.
