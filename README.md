@@ -5,6 +5,10 @@ This is a websocket server for Delphi.
 ![Delphi Supported Versions](https://img.shields.io/badge/Delphi%20Supported%20Versions-10.1%20and%20ever-blue.svg)
 ![Platforms](https://img.shields.io/badge/Supported%20platforms-Win32%20and%20Win64-red.svg)
 
+<p align="center">
+  <img src="samples/images/bird-socket-server-banner.png">  
+</p>  
+
 ## Prerequisites
 
 `[Optional]` For ease I recommend using the Boss for installation
