@@ -3,7 +3,7 @@ unit Bird.Socket.Server;
 interface
 
 uses IdCustomTCPServer, IdHashSHA, IdSSLOpenSSL, IdContext, IdSSL, IdIOHandler, IdGlobal, IdCoderMIME, System.SysUtils,
-  System.Generics.Collections, Bird.Socket.Helpers, Bird.Socket.Consts, Bird.Socket.Types, Bird.Socket.Context;
+  Bird.Socket.Helpers, Bird.Socket.Consts, Bird.Socket.Types, Bird.Socket.Connection;
 
 type
   TBirdSocketServer = class(TIdCustomTCPServer)
@@ -13,18 +13,21 @@ type
     FOnConnect: TEventListener;
     FOnDisconnect: TEventListener;
     FOnExecute: TEventListener;
+    FBirds: TBirds;
     function ParseHeaders(const AValue: string): THeaders;
     function GetEncodedHash(const ASecretKey: string): string;
     function GetSuccessHandShakeMessage(const AHash: string): string;
+    function GetBirdFromContext(const AContext: TIdContext): TBirdSocketConnection;
     procedure DoOnConnect(AContext: TIdContext);
     procedure DoOnDisconnect(AContext: TIdContext);
     procedure DoOnExecute(AContext: TIdContext);
   protected
-    function DoExecute(AContext: TIdContext): Boolean; override;
-    procedure DoConnect(AContext: TIdContext); override;
+    function DoExecute(ABird: TIdContext): Boolean; override;
+    procedure DoConnect(ABird: TIdContext); override;
   public
     constructor Create(const APort: Integer);
     property OnExecute;
+    property Birds: TBirds read FBirds;
     procedure InitSSL(AIdServerIOHandlerSSLOpenSSL: TIdServerIOHandlerSSLOpenSSL);
     procedure AddEventListener(const AEventType: TEventType; const AEvent: TEventListener);
     procedure Start; virtual; abstract;
@@ -47,21 +50,16 @@ begin
 end;
 
 procedure TBirdSocketServer.DoOnConnect(AContext: TIdContext);
-var
-  LContext: TBirdSocketContext;
 begin
-  LContext := TBirdSocketContext.Create(AContext);
-  try
-    if Assigned(FOnConnect) then
-      FOnConnect(LContext);
-  finally
-    LContext.Free;
-  end;
+  FBirds.Add(TBirdSocketConnection.Create(AContext));
+  if Assigned(FOnConnect) then
+    FOnConnect(FBirds.Last);
 end;
 
 constructor TBirdSocketServer.Create(const APort: Integer);
 begin
   inherited Create;
+  FBirds := TBirds.Create;
   DefaultPort := APort;
   Active := True;
   FIdHashSHA1 := TIdHashSHA1.Create;
@@ -75,43 +73,41 @@ destructor TBirdSocketServer.Destroy;
 begin
   Active := False;
   FIdHashSHA1.DisposeOf;
+  FBirds.DisposeOf;
   inherited;
 end;
 
 procedure TBirdSocketServer.DoOnDisconnect(AContext: TIdContext);
 var
-  LContext: TBirdSocketContext;
+  LBird: TBirdSocketConnection;
 begin
-  LContext := TBirdSocketContext.Create(AContext);
-  try
-    if Assigned(FOnDisconnect) then
-      FOnDisconnect(LContext);
-  finally
-    LContext.Free;
-  end;
+  LBird := GetBirdFromContext(AContext);
+  if Assigned(FOnDisconnect) then
+    FOnDisconnect(LBird);
+  FBirds.Remove(LBird);
 end;
 
-procedure TBirdSocketServer.DoConnect(AContext: TIdContext);
+procedure TBirdSocketServer.DoConnect(ABird: TIdContext);
 begin
-  if (AContext.Connection.IOHandler is TIdSSLIOHandlerSocketBase) then
-    TIdSSLIOHandlerSocketBase(AContext.Connection.IOHandler).PassThrough := False;
-  AContext.Connection.IOHandler.HandShaked := False;
+  if (ABird.Connection.IOHandler is TIdSSLIOHandlerSocketBase) then
+    TIdSSLIOHandlerSocketBase(ABird.Connection.IOHandler).PassThrough := False;
+  ABird.Connection.IOHandler.HandShaked := False;
   inherited;
 end;
 
-function TBirdSocketServer.DoExecute(AContext: TIdContext): Boolean;
+function TBirdSocketServer.DoExecute(ABird: TIdContext): Boolean;
 var
   LBytes: TArray<Byte>;
   LMessage: string;
   LHeaders: THeaders;
 begin
-  if not AContext.Connection.IOHandler.HandShaked then
+  if not ABird.Connection.IOHandler.HandShaked then
   begin
-    AContext.Connection.IOHandler.CheckForDataOnSource(TIMEOUT_DATA_ON_SOURCE);
-    if not AContext.Connection.IOHandler.InputBufferIsEmpty then
+    ABird.Connection.IOHandler.CheckForDataOnSource(TIMEOUT_DATA_ON_SOURCE);
+    if not ABird.Connection.IOHandler.InputBufferIsEmpty then
     begin
       try
-        AContext.Connection.IOHandler.InputBuffer.ExtractToBytes(TIdBytes(LBytes));
+        ABird.Connection.IOHandler.InputBuffer.ExtractToBytes(TIdBytes(LBytes));
         LMessage := IndyTextEncoding_UTF8.GetString(TIdBytes(LBytes));
       except
       end;
@@ -121,11 +117,11 @@ begin
           if LHeaders[HEADERS_UPGRADE].ToLower.Equals(HEADERS_WEBSOCKET) then
           begin
             try
-              AContext.Connection.IOHandler.Write(GetSuccessHandShakeMessage(GetEncodedHash(LHeaders[HEADERS_AUTHORIZATION])),
+              ABird.Connection.IOHandler.Write(GetSuccessHandShakeMessage(GetEncodedHash(LHeaders[HEADERS_AUTHORIZATION])),
                 IndyTextEncoding_UTF8);
             except
             end;
-            AContext.Connection.IOHandler.HandShaked := True;
+            ABird.Connection.IOHandler.HandShaked := True;
           end;
       finally
         LHeaders.DisposeOf;
@@ -136,16 +132,21 @@ begin
 end;
 
 procedure TBirdSocketServer.DoOnExecute(AContext: TIdContext);
-var
-  LContext: TBirdSocketContext;
 begin
-  LContext := TBirdSocketContext.Create(AContext);
-  try
-    if Assigned(FOnExecute) then
-      FOnExecute(LContext);
-  finally
-    LContext.Free;
+  if Assigned(FOnExecute) then
+    FOnExecute(GetBirdFromContext(AContext));
+end;
+
+function TBirdSocketServer.GetBirdFromContext(const AContext: TIdContext): TBirdSocketConnection;
+var
+  LBird: TBirdSocketConnection;
+begin
+  for LBird in FBirds do
+  begin
+    if LBird.Id = AContext.Binding.ID then
+      Exit(LBird);
   end;
+  Result := TBirdSocketConnection.Create(AContext);
 end;
 
 function TBirdSocketServer.GetEncodedHash(const ASecretKey: string): string;

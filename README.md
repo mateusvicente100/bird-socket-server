@@ -47,19 +47,19 @@ begin
   LServer := TBirdSocket.Create(8080);
   try
     LServer.AddEventListener(TEventType.CONNECT,
-      procedure(const AContext: TBirdSocketContext)
+      procedure(const ABird: TBirdSocketConnection)
       begin
         // Do on connect.
       end);
 
     LServer.AddEventListener(TEventType.EXECUTE,
-      procedure(const AContext: TBirdSocketContext)
+      procedure(const ABird: TBirdSocketConnection)
       begin
         // Do on execute.
       end);
 
     LServer.AddEventListener(TEventType.DISCONNECT,
-      procedure(const AContext: TBirdSocketContext)
+      procedure(const ABird: TBirdSocketConnection)
       begin
         // Do on disconnect.
       end);

@@ -2,7 +2,7 @@ unit Bird.Socket.Connection;
 
 interface
 
-uses IdContext, Bird.Socket.Consts, Bird.Socket.Helpers, System.JSON;
+uses IdContext, Bird.Socket.Consts, Bird.Socket.Helpers, System.JSON, System.Generics.Collections;
 
 type
   TBirdSocketConnection = class
@@ -11,14 +11,16 @@ type
   public
     constructor Create(const AIdContext: TIdContext);
     function WaitMessage: string;
-    function ID: Integer;
     function IPAdress: string;
+    function Id: Integer;
     procedure Send(const AMessage: string); overload;
     procedure Send(const ACode: Integer; const AMessage: string); overload;
     procedure Send(const ACode: Integer; const AMessage: string; const AValues: array of const); overload;
     procedure Send(const AJSONObject: TJSONObject; const AOwns: Boolean = True); overload;
     procedure SendFile(const AFile: string); overload;
   end;
+
+  TBirds = TList<TBirdSocketConnection>;
 
 implementation
 

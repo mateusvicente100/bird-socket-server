@@ -2,11 +2,11 @@ unit Bird.Socket;
 
 interface
 
-uses IdContext, Bird.Socket.Server, System.SysUtils, Bird.Socket.Types, Bird.Socket.Context;
+uses IdContext, Bird.Socket.Server, System.SysUtils, Bird.Socket.Types, Bird.Socket.Connection;
 
 type
   TEventType = Bird.Socket.Types.TEventType;
-  TBirdSocketContext = Bird.Socket.Context.TBirdSocketContext;
+  TBirdSocketConnection = Bird.Socket.Connection.TBirdSocketConnection;
   TBirdSocket = class(TBirdSocketServer)
   public
     procedure Start; override;

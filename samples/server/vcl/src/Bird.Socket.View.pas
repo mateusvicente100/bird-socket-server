@@ -16,6 +16,7 @@ type
     btnStop: TButton;
     btnStart: TButton;
     ListBoxLog: TListBox;
+    Label1: TLabel;
     procedure imgCloseClick(Sender: TObject);
     procedure btnStartClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -57,30 +58,30 @@ begin
   FBirdSocket := TBirdSocket.Create(8080);
 
   FBirdSocket.AddEventListener(TEventType.CONNECT,
-    procedure(const AContext: TBirdSocketContext)
+    procedure(const ABird: TBirdSocketConnection)
     begin
-      ListBoxLog.Items.Add(Format('Client %s connected.', [AContext.IPAdress]));
+      ListBoxLog.Items.Add(Format('Client %s connected.', [ABird.IPAdress]));
     end);
 
   FBirdSocket.AddEventListener(TEventType.EXECUTE,
-    procedure(const AContext: TBirdSocketContext)
+    procedure(const ABird: TBirdSocketConnection)
     var
       LMessage: string;
     begin
-      LMessage := AContext.WaitMessage;
+      LMessage := ABird.WaitMessage;
       if LMessage.Trim.Equals('ping') then
-        AContext.Send('pong')
+        ABird.Send('pong')
       else if LMessage.Trim.IsEmpty then
-        AContext.Send('empty message')
+        ABird.Send('empty message')
       else
-        AContext.Send(Format('message received: "%s"', [LMessage]));
-      ListBoxLog.Items.Add(Format('Message received from %s: %s.', [AContext.IPAdress, LMessage]));
+        ABird.Send(Format('message received: "%s"', [LMessage]));
+      ListBoxLog.Items.Add(Format('Message received from %s: %s.', [ABird.IPAdress, LMessage]));
     end);
 
   FBirdSocket.AddEventListener(TEventType.DISCONNECT,
-    procedure(const AContext: TBirdSocketContext)
+    procedure(const ABird: TBirdSocketConnection)
     begin
-      ListBoxLog.Items.Add(Format('Client %s disconnected.', [AContext.IPAdress]));
+      ListBoxLog.Items.Add(Format('Client %s disconnected.', [ABird.IPAdress]));
     end);
   HandlerButtons(False);
 end;

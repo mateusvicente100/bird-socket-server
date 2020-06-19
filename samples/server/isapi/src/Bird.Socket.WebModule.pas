@@ -25,18 +25,18 @@ begin
   FBirdSocket := TBirdSocket.Create(8080);
 
   FBirdSocket.AddEventListener(TEventType.EXECUTE,
-    procedure(const AContext: TIdContext)
+    procedure(const ABird: TIdContext)
     var
       LMessage: string;
     begin
-      AContext.Connection.IOHandler.CheckForDataOnSource(TIMEOUT_DATA_ON_SOURCE);
-      LMessage := AContext.Connection.IOHandler.ReadString;
+      ABird.Connection.IOHandler.CheckForDataOnSource(TIMEOUT_DATA_ON_SOURCE);
+      LMessage := ABird.Connection.IOHandler.ReadString;
       if LMessage.Trim.Equals('ping') then
-        AContext.Connection.IOHandler.Send('pong')
+        ABird.Connection.IOHandler.Send('pong')
       else if LMessage.Trim.IsEmpty then
-        AContext.Connection.IOHandler.Send('empty message')
+        ABird.Connection.IOHandler.Send('empty message')
       else
-        AContext.Connection.IOHandler.Send(Format('message received: "%s"', [LMessage]));
+        ABird.Connection.IOHandler.Send(Format('message received: "%s"', [LMessage]));
     end);
 end;
 

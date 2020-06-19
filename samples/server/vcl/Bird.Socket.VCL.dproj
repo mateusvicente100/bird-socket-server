@@ -103,7 +103,7 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\..\..\src\Bird.Socket.Consts.pas"/>
-        <DCCReference Include="..\..\..\src\Bird.Socket.Context.pas"/>
+        <DCCReference Include="..\..\..\src\Bird.Socket.Connection.pas"/>
         <DCCReference Include="..\..\..\src\Bird.Socket.Helpers.pas"/>
         <DCCReference Include="..\..\..\src\Bird.Socket.pas"/>
         <DCCReference Include="..\..\..\src\Bird.Socket.Server.pas"/>

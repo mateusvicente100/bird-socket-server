@@ -2,11 +2,11 @@ unit Bird.Socket.Types;
 
 interface
 
-uses System.Generics.Collections, IdCustomTCPServer, Bird.Socket.Context;
+uses System.Generics.Collections, IdCustomTCPServer, Bird.Socket.Connection;
 
 type
   THeaders = TDictionary<string, string>;
-  TEventListener = reference to procedure(const AContext: TBirdSocketContext);
+  TEventListener = reference to procedure(const ABird: TBirdSocketConnection);
 
 {$SCOPEDENUMS ON}
   TEventType = (CONNECT, EXECUTE, DISCONNECT);

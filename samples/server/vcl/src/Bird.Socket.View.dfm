@@ -2134,7 +2134,7 @@ object FrmMainMenu: TFrmMainMenu
     Left = 0
     Top = 40
     Width = 800
-    Height = 57
+    Height = 97
     Align = alTop
     BevelOuter = bvNone
     Color = 15790320
@@ -2142,13 +2142,26 @@ object FrmMainMenu: TFrmMainMenu
     TabOrder = 1
     DesignSize = (
       800
-      57)
+      97)
     object lblServer: TLabel
       Left = 7
       Top = 6
       Width = 22
       Height = 13
       Caption = 'Port'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = 7947776
+      Font.Height = -11
+      Font.Name = 'Segoe UI'
+      Font.Style = [fsBold]
+      ParentFont = False
+    end
+    object Label1: TLabel
+      Left = 7
+      Top = 52
+      Width = 41
+      Height = 13
+      Caption = 'Clientes'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = 7947776
       Font.Height = -11
@@ -2189,9 +2202,9 @@ object FrmMainMenu: TFrmMainMenu
   object ListBoxLog: TListBox
     AlignWithMargins = True
     Left = 7
-    Top = 97
+    Top = 137
     Width = 786
-    Height = 496
+    Height = 456
     Margins.Left = 7
     Margins.Top = 0
     Margins.Right = 7
