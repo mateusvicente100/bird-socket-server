@@ -13,6 +13,8 @@ type
     function WaitMessage: string;
     function IPAdress: string;
     function Id: Integer;
+    function CheckForDataOnSource(const ATimeOut: Integer): Boolean;
+    function Connected: Boolean;
     procedure Send(const AMessage: string); overload;
     procedure Send(const ACode: Integer; const AMessage: string); overload;
     procedure Send(const ACode: Integer; const AMessage: string; const AValues: array of const); overload;
@@ -23,6 +25,16 @@ type
   TBirds = TList<TBirdSocketConnection>;
 
 implementation
+
+function TBirdSocketConnection.CheckForDataOnSource(const ATimeOut: Integer): Boolean;
+begin
+  Result := FIdContext.Connection.IOHandler.CheckForDataOnSource(ATimeOut);
+end;
+
+function TBirdSocketConnection.Connected: Boolean;
+begin
+  Result := FIdContext.Connection.Connected;
+end;
 
 constructor TBirdSocketConnection.Create(const AIdContext: TIdContext);
 begin
