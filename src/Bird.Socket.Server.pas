@@ -85,6 +85,7 @@ begin
   if Assigned(FOnDisconnect) then
     FOnDisconnect(LBird);
   FBirds.Remove(LBird);
+  LBird.Free;
 end;
 
 procedure TBirdSocketServer.DoConnect(ABird: TIdContext);
