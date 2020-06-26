@@ -2134,7 +2134,7 @@ object FrmMainMenu: TFrmMainMenu
     Left = 0
     Top = 40
     Width = 800
-    Height = 97
+    Height = 105
     Align = alTop
     BevelOuter = bvNone
     Color = 15790320
@@ -2142,7 +2142,7 @@ object FrmMainMenu: TFrmMainMenu
     TabOrder = 1
     DesignSize = (
       800
-      97)
+      105)
     object lblServer: TLabel
       Left = 7
       Top = 6
@@ -2156,12 +2156,25 @@ object FrmMainMenu: TFrmMainMenu
       Font.Style = [fsBold]
       ParentFont = False
     end
-    object Label1: TLabel
+    object lblClients: TLabel
       Left = 7
       Top = 52
-      Width = 41
+      Width = 35
       Height = 13
-      Caption = 'Clientes'
+      Caption = 'Clients'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = 7947776
+      Font.Height = -11
+      Font.Name = 'Segoe UI'
+      Font.Style = [fsBold]
+      ParentFont = False
+    end
+    object lblMessage: TLabel
+      Left = 313
+      Top = 52
+      Width = 46
+      Height = 13
+      Caption = 'Message'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = 7947776
       Font.Height = -11
@@ -2198,13 +2211,39 @@ object FrmMainMenu: TFrmMainMenu
       TabOrder = 1
       OnClick = btnStartClick
     end
+    object cbxClients: TComboBox
+      Left = 7
+      Top = 71
+      Width = 300
+      Height = 21
+      Style = csDropDownList
+      TabOrder = 3
+    end
+    object edtMessage: TEdit
+      Left = 313
+      Top = 71
+      Width = 395
+      Height = 21
+      Anchors = [akLeft, akTop, akRight]
+      TabOrder = 4
+    end
+    object btnSend: TButton
+      Left = 714
+      Top = 69
+      Width = 75
+      Height = 25
+      Anchors = [akTop, akRight]
+      Caption = 'Send'
+      TabOrder = 5
+      OnClick = btnSendClick
+    end
   end
   object ListBoxLog: TListBox
     AlignWithMargins = True
     Left = 7
-    Top = 137
+    Top = 145
     Width = 786
-    Height = 456
+    Height = 448
     Margins.Left = 7
     Margins.Top = 0
     Margins.Right = 7
@@ -2219,7 +2258,7 @@ object FrmMainMenu: TFrmMainMenu
     ItemHeight = 17
     ParentFont = False
     TabOrder = 2
-    ExplicitTop = 145
-    ExplicitHeight = 448
+    ExplicitTop = 137
+    ExplicitHeight = 456
   end
 end

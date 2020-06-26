@@ -198,7 +198,8 @@ end;
 
 procedure TBirdSocketServer.Stop;
 begin
-  Self.StopListening;
+  if Self.Active then
+    Self.StopListening;
 end;
 
 end.

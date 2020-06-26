@@ -12,6 +12,9 @@
         <Projects Include="vcl\Bird.Socket.VCL.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="service\Bird.Socket.Service.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -47,14 +50,23 @@
     <Target Name="Bird_Socket_VCL:Make">
         <MSBuild Projects="vcl\Bird.Socket.VCL.dproj" Targets="Make"/>
     </Target>
+    <Target Name="Bird_Socket_Service">
+        <MSBuild Projects="service\Bird.Socket.Service.dproj"/>
+    </Target>
+    <Target Name="Bird_Socket_Service:Clean">
+        <MSBuild Projects="service\Bird.Socket.Service.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Bird_Socket_Service:Make">
+        <MSBuild Projects="service\Bird.Socket.Service.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="Bird_Socket_Isapi;Bird_Socket_Console;Bird_Socket_VCL"/>
+        <CallTarget Targets="Bird_Socket_Isapi;Bird_Socket_Console;Bird_Socket_VCL;Bird_Socket_Service"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="Bird_Socket_Isapi:Clean;Bird_Socket_Console:Clean;Bird_Socket_VCL:Clean"/>
+        <CallTarget Targets="Bird_Socket_Isapi:Clean;Bird_Socket_Console:Clean;Bird_Socket_VCL:Clean;Bird_Socket_Service:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="Bird_Socket_Isapi:Make;Bird_Socket_Console:Make;Bird_Socket_VCL:Make"/>
+        <CallTarget Targets="Bird_Socket_Isapi:Make;Bird_Socket_Console:Make;Bird_Socket_VCL:Make;Bird_Socket_Service:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

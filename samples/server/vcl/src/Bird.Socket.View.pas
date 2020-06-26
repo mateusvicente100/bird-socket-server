@@ -16,13 +16,18 @@ type
     btnStop: TButton;
     btnStart: TButton;
     ListBoxLog: TListBox;
-    Label1: TLabel;
+    lblClients: TLabel;
+    cbxClients: TComboBox;
+    edtMessage: TEdit;
+    btnSend: TButton;
+    lblMessage: TLabel;
     procedure imgCloseClick(Sender: TObject);
     procedure btnStartClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure btnStopClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure btnClearClick(Sender: TObject);
+    procedure btnSendClick(Sender: TObject);
   private
     FBirdSocket: TBirdSocket;
     procedure HandlerButtons(const AConnected: Boolean);
@@ -38,6 +43,20 @@ implementation
 procedure TFrmMainMenu.btnClearClick(Sender: TObject);
 begin
   ListBoxLog.Clear;
+end;
+
+procedure TFrmMainMenu.btnSendClick(Sender: TObject);
+var
+  LBird: TBirdSocketConnection;
+begin
+  for LBird in FBirdSocket.Birds do
+  begin
+    if LBird.Id = StrToIntDef(Copy(cbxClients.Text, 0, 5), -1) then
+    begin
+      LBird.Send(edtMessage.Text);
+      Break;
+    end;
+  end;
 end;
 
 procedure TFrmMainMenu.btnStartClick(Sender: TObject);
@@ -61,6 +80,7 @@ begin
     procedure(const ABird: TBirdSocketConnection)
     begin
       ListBoxLog.Items.Add(Format('Client %s connected.', [ABird.IPAdress]));
+      cbxClients.Items.Add(Format('%s - %s', [ABird.Id.ToString.PadLeft(5, '0'), ABird.IPAdress]));
     end);
 
   FBirdSocket.AddEventListener(TEventType.EXECUTE,
@@ -80,8 +100,16 @@ begin
 
   FBirdSocket.AddEventListener(TEventType.DISCONNECT,
     procedure(const ABird: TBirdSocketConnection)
+    var
+      I: Integer;
     begin
       ListBoxLog.Items.Add(Format('Client %s disconnected.', [ABird.IPAdress]));
+      for I := 0 to Pred(cbxClients.Items.Count) do
+        if cbxClients.Items[I].StartsWith(ABird.Id.ToString.PadLeft(5, '0')) then
+        begin
+          cbxClients.Items.Delete(I);
+          Break;
+        end;
     end);
   HandlerButtons(False);
 end;
