@@ -3,7 +3,7 @@ unit Bird.Socket.Server;
 interface
 
 uses IdCustomTCPServer, IdHashSHA, IdSSLOpenSSL, IdContext, IdSSL, IdIOHandler, IdGlobal, IdCoderMIME, System.SysUtils,
-  Bird.Socket.Helpers, Bird.Socket.Consts, Bird.Socket.Types, Bird.Socket.Connection;
+  Bird.Socket.Helpers, Bird.Socket.Consts, Bird.Socket.Types, Bird.Socket.Connection, System.Generics.Collections;
 
 type
   TBirdSocketServer = class(TIdCustomTCPServer)
@@ -141,13 +141,19 @@ end;
 function TBirdSocketServer.GetBirdFromContext(const AContext: TIdContext): TBirdSocketConnection;
 var
   LBird: TBirdSocketConnection;
+  LBirds: TList<TBirdSocketConnection>;
 begin
-  for LBird in FBirds do
-  begin
-    if LBird.Id = AContext.Binding.ID then
-      Exit(LBird);
+  LBirds := FBirds.LockList;
+  try
+    for LBird in LBirds do
+    begin
+      if LBird.IsEquals(AContext) then
+        Exit(LBird);
+    end;
+    Result := TBirdSocketConnection.Create(AContext);
+  finally
+    FBirds.UnLockList
   end;
-  Result := TBirdSocketConnection.Create(AContext);
 end;
 
 function TBirdSocketServer.GetEncodedHash(const ASecretKey: string): string;
