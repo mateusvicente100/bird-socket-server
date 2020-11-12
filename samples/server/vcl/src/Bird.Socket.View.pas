@@ -49,7 +49,7 @@ procedure TFrmMainMenu.btnSendClick(Sender: TObject);
 var
   LBird: TBirdSocketConnection;
 begin
-  for LBird in FBirdSocket.Birds do
+  for LBird in FBirdSocket.Birds.Items do
   begin
     if LBird.Id = StrToIntDef(Copy(cbxClients.Text, 0, 5), -1) then
     begin

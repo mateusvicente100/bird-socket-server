@@ -29,6 +29,7 @@ type
     FItems: TList<TBirdSocketConnection>;
   public
     constructor Create;
+    property Items: TList<TBirdSocketConnection> read FItems write FItems;
     function LockList: TList<TBirdSocketConnection>;
     function Last: TBirdSocketConnection;
     procedure Add(const ABird: TBirdSocketConnection);

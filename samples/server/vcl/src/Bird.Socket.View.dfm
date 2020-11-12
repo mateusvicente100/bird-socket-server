@@ -2258,7 +2258,5 @@ object FrmMainMenu: TFrmMainMenu
     ItemHeight = 17
     ParentFont = False
     TabOrder = 2
-    ExplicitTop = 137
-    ExplicitHeight = 456
   end
 end
