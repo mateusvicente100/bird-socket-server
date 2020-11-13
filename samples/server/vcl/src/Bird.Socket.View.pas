@@ -51,7 +51,7 @@ var
 begin
   for LBird in FBirdSocket.Birds.Items do
   begin
-    if LBird.Id = StrToIntDef(Copy(cbxClients.Text, 0, 5), -1) then
+    if (LBird.Id.ToString = cbxClients.Text) then
     begin
       LBird.Send(edtMessage.Text);
       Break;
@@ -80,7 +80,7 @@ begin
     procedure(const ABird: TBirdSocketConnection)
     begin
       ListBoxLog.Items.Add(Format('Client %s connected.', [ABird.IPAdress]));
-      cbxClients.Items.Add(Format('%s - %s', [ABird.Id.ToString.PadLeft(5, '0'), ABird.IPAdress]));
+      cbxClients.Items.Add(ABird.Id.ToString);
     end);
 
   FBirdSocket.AddEventListener(TEventType.EXECUTE,
@@ -105,7 +105,7 @@ begin
     begin
       ListBoxLog.Items.Add(Format('Client %s disconnected.', [ABird.IPAdress]));
       for I := 0 to Pred(cbxClients.Items.Count) do
-        if cbxClients.Items[I].StartsWith(ABird.Id.ToString.PadLeft(5, '0')) then
+        if (cbxClients.Items[I] = ABird.Id.ToString) then
         begin
           cbxClients.Items.Delete(I);
           Break;
